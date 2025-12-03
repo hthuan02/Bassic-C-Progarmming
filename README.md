@@ -430,13 +430,26 @@ switch(expression)
     while (Expression)
     {
         // Code
-        // Tự thêm biến đếm tăng-giảm giá trị
     }
-    // Nếu để biến đếm ở phía trước while, i = 0
-    // Nếu để biến đếm ở phía sau while, i = 1
+
 
 ```
-`flowchart`: Express đúng (!=0) tiếp tục lặp, Expression sai(==0) thoát vòng lặp.
+`flowchart`: Kiểm tra điều kiện (Expression) đúng (!=0) tiếp tục lặp, Expression sai(==0) thoát vòng lặp.
+
+## 3. Do...while
+
+> Dùng để kiểm tra những giá trị input
+
+```c
+    do
+    {
+        // code
+    } while (Expression);
+
+```
+
+
+`flowchart`: Thực hiện câu lệnh trước, rồi mới kiểm tra điều kiện (Expression) sau. Nên lặp ít nhất 1 lần.
 
 ### Từ khóa `continue`
 
@@ -818,7 +831,7 @@ Hàm có `return` thì ở `main()` phải tạo 1 biến trung gian gán giá t
 
 # I. String(Chuỗi)
 
-> Chuỗi là tập hợp các ký tự (char) được lưu trữ trên các ô nhớ liên tiếp, luôn có 1 ký tự `null`(`\0`) để báo hiệu kết thúc chuỗi.
+> Chuỗi là tập hợp các ký tự nằm liền nhau, lưu liên tiếp vào ô nhớ RAM. Luôn có 1 ký tự `null`(`\0`) kết thúc chuỗi.
 
 Có 2 cách khai báo chuỗi: {V i e t N a m \0}
 
@@ -1066,145 +1079,137 @@ int main()
 
 - Hàm `strtok` là hàm **tách** chuỗi dài thành các chuỗi nhỏ, dựa vào các ký tự đặc biệt để phân rẽ chuỗi.
 
+</details>
 
+<details>
+  <summary><h3>Lesson 8: One-dimensional Array</h3></summary>
 
+## I. Mảng 1 chiều
 
+> Là tập hợp các biến nằm liền nhau và có cùng kiểu dữ liệu, lưu vào các ô nhớ liên tiếp trên RAM.
 
+```c
+    unsigned char mang[5] = {0x01, 0x02, 0x03, 0x04, 0x05};
 
+    /**
+     *  mang[0] = 0x01
+     *  
+     *  - kiểu dữ liệu: unsigned char(1 byte)
+     *  - &mang[0]: địa chỉ phần tử trên RAM
+     *  - 0x01: giá trị phần tử
+     *  - 0: index(vị trí) phần tử trong mảng 
+     */
+```
 
+- Địa chỉ của mảng chính là tên mảng đó, hoặc là địa chỉ phần tử đầu tiên của mảng.
 
+(_Nếu truy cập **phần tử** của mảng phải có `&`_)
 
+ 
 
+</details>
 
+<details>
+  <summary><h3>Additional Notes</h3></summary>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+## 1. Tham số dòng lệnh argc, argv
 
 ```c
 #include <stdio.h>
 
-int a;               // bss, biến toàn cục chưa khởi tạo
+/**
+ * @brief   Mô tả ngắn gọn về hàm, biến, lớp… (1-2 dòng)
+ * 
+ * @param   Tên_tham_số  Giải thích tham số của hàm
+ *           (nếu hàm có nhiều tham số, lặp lại @param cho từng tham số)
+ * 
+ * @return  Giá trị trả về
+ * 
+ * @details Mô tả chi tiết hơn về chức năng, cơ chế, thuật toán hoặc cách hoạt động
+ *          của hàm/biến/lớp. Có thể dài hơn, nhiều dòng.
+ * 
+ * @note    Thông tin quan trọng, cảnh báo, lưu ý khi sử dụng hàm/biến/lớp.
+ */
 
-int b = 0;           // data, biến toàn cục đã khởi tạo
 
-const int c = 1;     // .rodata(vùng nhớ hằng) RAM(read0-only)
+/**
+ * @brief Tham số dòng lệnh của hàm main.
+ *
+ * @param argc Số lượng tham số dòng lệnh truyền vào chương trình.
+ *             Luôn >= 1, vì argv[0] chứa tên chương trình.
+ * @param argv Mảng các chuỗi chứa từng tham số dòng lệnh.
+ *             argv[0] là tên chương trình, argv[1] là tham số đầu tiên, ...
+ * 
+ * @return 0
+ *
+ * @details
+ * Cơ chế này cho phép điều khiển chương trình từ bên ngoài thông Command Terminal, tương tự
+ * trên cả Windows và Linux. Thường dùng nhiều trên Linux nhờ môi trường terminal mạnh.
+ *
+ * @note
+ * - Luôn kiểm tra argc trước khi truy cập argv[i] để tránh truy xuất ngoài phạm vi.
+ * - Ứng dụng phổ biến: truyền dữ liệu, chọn chế độ chạy, mở file, xử lý batch/script.
+ */
 
-char *hehe = "ABC";  // con trỏ data, chuỗi .rodata(vùng nhớ hằng)
-
-char *data = x +1    // data (có khởi tạo = x+1)
-
-char *bss;           // bss (chưa khởi tạo)
-
-char *ten2 = NULL;   // con trỏ data(có khởi tạo null), NULL không nằm ở vùng nhớ nào khác
-
-char ten3[] = {0};  // data segment(mảng có khởi giá trị = 0)
-
-char ten4[] = "";   // data segment (chuỗi có 1 giá trị kết thúc `\0`)
-
-char *ten5 =  ""; // con trỏ data, chuỗi .rodata
-
-// hàm void -> text segment -> biên dịch ra mã máy
-void hehe(int a, int b) 
+int main(int argc, char *argv[])
 {
+    printf("argc = %d\n", argc);
+    printf("argv[0] = %s\n", argv[0]);
+    
+    if (argc > 1)
+        printf("argv[1] = %s\n", argv[1]);
 
-    int x;               //stack, biến cục bộ
-
-    static int y;                // bss, static với biến cục bộ-chưa khởi tạo
-
-    static int c = 0;            // data, static với biến cục bộ-đã khởi tạo
-
-    const int c = 1;         // khi được truy cập địa chỉ `&` -> stack
-                             // khi không truy cập địa chỉ `&` là giá trị compile-time -> không lưu vào đâu hết.
-
-
-    const int d = c + 1;     // stack (run-time)
-}
-
-int main()
-{   
-    char *ten = "ABC";      // con trỏ stack, chuỗi .rodata(vùng nhớ hằng)
-
-    char ten1[] = "ABC";     // Stack
     return 0;
 }
-
 ```
 
+## 2. Tại sao sử dụng thư viện `<stdint.h>`?
 
+- Khi dùng các kiểu dữ liệu có sẵn như `short, int, long`, thì đối với mỗi PC có kiển trúc khác nhau (32bit/64bit) thì kích thước sẽ khác nhau. Ngay cả kích thước trên MCU cũng khác nhau (STM8/STM32).
 
+- `<stdint.h>` là thư viện dùng để sử dụng kiểu dữ liệu nguyên với số bit **cố định** (không thay đổi).
 
+```c
+    // Có dấu
 
+    int8_t      -> 8bit  (1byte)
+    int16_t     -> 16bit   2
+    int32_t     -> 32bit   4
+    int64_t     -> 64bit   8
+```
+```c
+    // Không dấu
+    uint8_t     -> 8bit
+    uint16_t    -> 16bit
+    uint32_t    -> 32bit
+    uint64_t    -> 64bit
+```
+## 3. `return;`, `return 0;`, `return <biến>;`
 
+- `return;`         -> Hàm void (): Thoát hàm ngay lập tức.
 
+- `return 0;`       -> Hàm <data type> (): Chương trình chạy thành công, đồng thời thoát hàm.
 
+- `return <biến>;`  -> Hàm <data type> (): Trả về giá trị
 
+## 4. Tràn số -> Ép kiểu (type casting)
 
+```c
+#include <stdio.h>
 
+int main() {
+    int a = 300;
+    unsigned char b, c; // uint8_t
 
+    b = (unsigned char)a; // Ép kiểu
+ 
+    c = a;                // Không ép kiểu
 
-
-
+    printf("Ép kiểu: b = %d\n", b); // 300 mod 256 = 44
+    printf("Không ép kiểu: c = %d\n", c); // compiler có thể cảnh báo, tràn số xảy ra
+}
+```
+- Tường minh code khi chuyển đổi giá trị **khác kiểu dữ liệu**, đảm bảo an toàn giá trị tránh bị tràn số
 
 
 

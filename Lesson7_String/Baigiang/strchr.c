@@ -16,6 +16,6 @@ int main()
 
     char *str = strchr(s1,ch);
 
-    printf("Ký tự '%c', vị trí %d ",ch,str-s1);
+    printf("Ký tự '%c', vị trí %d ",*str,str-s1);
     return 0;
 }   
