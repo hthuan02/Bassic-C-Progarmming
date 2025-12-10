@@ -1404,7 +1404,7 @@ int main(int argc, char const *argv[])
 ```
 
 <details>
-  <summary><h4>Một vài ví dụ về toán tử tăng-giảm với con trỏ</h4></summary>
+  <summary><h3>Một vài ví dụ về toán tử tăng-giảm với con trỏ</h3></summary>
 
 **VD1: (CHUẨN NHẤT)**
 ```c
@@ -1504,6 +1504,8 @@ int main(int argc, char const *argv[])
       return 0;
   }
 ```
+</details>
+
 ## 4. Mối quan hệ mảng với con trỏ
 
 ```c
