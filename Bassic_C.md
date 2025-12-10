@@ -192,8 +192,9 @@
     #define PI 3.14
 ```
 
-#### Interview1: Macro & Constant, Fuction khác nhau như thế nào?
+#### INTERVIEW1: Macro & Constant, Fuction khác nhau như thế nào?
 
+```c
 `Macro`
 
 - Không có biến thực sự, câu lệnh ở sau thay cho text ở trước, ở giai đoạn tiền xử lý.
@@ -225,7 +226,7 @@ Hằng số là biến cục bộ:
 - Biến được khai báo trong hàm là biến cục bộ lưu ở phân vùng Stack của bộ nhớ RAM - Stack Frame (Nếu có static thì lưu data segment).
 
 - Tốc độ thực thi chương trình chậm hơn macro, vì hàm cần thực hiện tác vụ phụ khi gọi hàm (Overhead call) gồm: push (đẩy tham số lên), jump (nhảy đến địa chỉ hàm), tạo stack frame, return (trả về). 
-
+```
 
 data segment: khởi tạo giá trị
 
@@ -989,7 +990,7 @@ int main()
 }
 ```
 
-#### Interview2: Copy chuỗi "abc" của mảng vào chuỗi "Thuan" của con trỏ được hay không?
+#### INTERVIEW2: Copy chuỗi "abc" của mảng vào chuỗi "Thuan" của con trỏ được hay không?
 
 ```c
 #include <stdio.h>
@@ -1008,10 +1009,11 @@ int main()
     return 0;
 }
 ```
-
+```c
 -> Không được, vì chuỗi `"Thuan"` lưu ở vùng nhớ hằng(.rodata) RAM(chỉ đọc). Không thể lấy mảng `s2[] = "123"` ghi đè lên được.
     
-    - Còn nếu `char ten[]` là mảng kí tự, thì thoải mái ghi đè, đảm bảo kích thước đủ lớn để không bị chuỗi nguồn ghi đè làm tràn dữ liệu.
+-> Còn nếu `char ten[]` là mảng kí tự, thì thoải mái ghi đè, đảm bảo kích thước đủ lớn để không bị chuỗi nguồn ghi đè làm tràn dữ liệu.
+```
 
 - Hàm `strcat` dùng để **nối** chuỗi nguồn vào phần tử cuối(đuôi) của chuỗi đích.
 
@@ -1105,7 +1107,455 @@ int main()
 
 (_Nếu truy cập **phần tử** của mảng phải có `&`_)
 
- 
+## II. Mảng 2 chiều 
+
+> Mảng 2 chiều là tập hợp các mảng 1 chiều được sắp xếp liền kề.
+
+Đặc trưng của mảng 2 chiều:
+
+- Kiểu dữ liệu phần tử, giá trị
+
+- Tên mảng `a` là địa chỉ của mảng, địa chỉ mảng là phần tử đầu tiên `&a[0][0]`
+
+**Note:** Khi truyền mảng 2 chiều vào hàm bắt buộc phải truyền số cột(có thể không truyền số hàng)
+
+-> Vì nếu không truyền cột thì Compiler sẽ không biết nhảy bao nhiêu ô để đến hàng tiếp theo.
+
+```c
+    // Khai báo đúng số hàng và cột
+    int mang[3][4] = {
+        1,2,3,4,
+        5,6,7,8,
+        10,12,1314,
+    };
+```
+
+```c
+    // Khai báo số cột nhiều hơn -> dùng `{}` để in mảng đúng
+    int mang[5][50] = {
+        {1,2,3,4,5},
+        {6,64,3,2,1},
+        {0,1,2,2,1},
+    };
+```
+
+- Truy xuất dữ liệu mảng
+```c
+    #include <stdio.h>
+    int mang[3][4] = {
+                1,2,3,4,
+                11,12,13,14,
+                21,22,23,24
+                };
+
+    char chuthich[3][6] = {
+        "dong1",
+        "dong2",
+        "dong3",
+    };
+
+    int main(int argc, char const *argv[])
+    {
+        printf("-------------------\n");
+        printf("%d\n", mang[2][3]);               //24
+        printf("%d\n", mang[1][0]);               //11
+        printf("%d\n", mang[1]);             // &mang[1][0] : địa chỉ 11 trêm RAM
+        printf("%d\n", &mang[1][0]);         // địa chỉ 11 trêm RAM
+        printf("-------------------\n");
+
+        printf("%s\n",chuthich[0]);
+    }
+```
+
+### Ứng của mảng 2 chiều
+
+#### 1. Tạo LOG (nhật ký)
+
+Là các dòng ghi trạng thái, thông tin và những vấn đề xảy ra trong code.
+
+`INFO`	Thông tin chung
+
+`DEBUG`	Thông tin chi tiết để debug
+
+`WARN`	Cảnh báo nhưng chương trình vẫn chạy
+
+`ERROR`	Lỗi không nghiêm trọng
+
+`FATAL`	Lỗi nghiêm trọng làm chương trình dừng
+
+```c
+    #include <stdio.h>
+
+    char error_logs[5][50] = {
+        "ERROR 0: Sai cu phap",
+        "ERROR 1: Tran bo nho",
+        "ERROR 2: Gia tri truyen vao sai",
+        "ERROR 3: Khong tra ve",
+        "ERROR 4: Timout"
+    };
+
+    int main(int argc, char const *argv[])
+    {
+        printf("%s\n",error_logs[0]);
+        printf("%s\n",error_logs[1]);
+        printf("%s\n",error_logs[2]);
+        printf("%s\n",error_logs[3]);
+        printf("%s\n",error_logs[4]);
+        return 0;
+    }
+```
+#### 2. Lưu dữ liệu 
+
+> Lưu dữ liệu nhiều cảm biến, quét LED,...
+
+```c
+    #include <stdio.h>
+
+    #define SENSOR_NUMBER 10
+    #define DAYS          31
+
+    int nhietdocambien [SENSOR_NUMBER][DAYS];
+
+    void nhapdulieu(int sensor_index, int day, int value)
+    {
+        nhietdocambien[sensor_index - 1] [day - 1] = value;  
+    }
+
+    int docdulieu(int sensor_index, int day)
+    {   
+        
+
+        return nhietdocambien[sensor_index - 1] [day - 1]; // -1 vì đếm từ 0
+    }
+
+    int main(int argc, char const *argv[])
+    {
+        nhapdulieu(1,1,28);
+        int temp = docdulieu(1,1);
+        printf("nhiet do cua sensor %d, ngay %d la %d",1,1,temp);
+
+        return 0;
+    }
+```
+
+</details>
+
+
+<details>
+  <summary><h3>Lesson 9: Pointer</h3></summary>
+
+_(phần 2 ở C-Advanced)_
+
+
+#### INTERVIEW3: int (*p)[5] và int *p[5] có gì khác nhau?
+
+```c
+int (*p)[5]: Là con trỏ đến mảng 5 phần tử kiểu int
+int *p[5]: Là mảng 5 phần tử con trỏ kiểu 
+```
+
+# A. Thao tác với con trỏ
+
+> Con trỏ là 1 biến, không dùng lưu giá trị mà nó dùng để lưu địa chỉ của 1 đối tượng (biến, hàm, mảng,...).
+
+> Con trỏ cũng như các biến khác, được cấp phát 1 vùng nhớ trên RAM.
+
+> Kích thước con trỏ phụ thuộc vào kiến trúc của máy tinh và trình biên dịch (Lap64bit = 8 byte, STM32 = 4 byte).
+
+## 1. Kiểu dữ liệu của con trỏ
+
+> Kiểu dữ liệu quyết định con trỏ sẽ lấy bao nhiêu byte dữ liệu từ vùng nhớ.
+
+- Cấp phát vùng nhớ trên RAM (MSB-LSB)
+
+```c
+#include <stdio.h>
+
+/**
+ *  0x07 0x06 0x05 0x05 0x04 0x03 0x02 0x2
+ *  Bit7 Bit6 Bit5 Bit4 Bit3 Bit2 Bit1 Bit0
+ *   |                                   |
+ *  MSB                                 LSB
+ *  0x03                                0xE8
+ *  
+ * - Vì cấp phát địa chỉ theo MSB-LSB nên trọng số cao được cấp trước, trọng số thấp cấp sau
+ * - (int) 0x00 0x00 0x03 0xE8
+ */
+
+int main(int argc, char const *argv[])
+{   
+    unsigned int x = 1000;  // x = 0x03E8 
+    unsigned char *ptr = (unsigned char*) &x; // ép kiểu vs con trỏ (data_type*)
+
+    printf("%02x ", *ptr);
+    printf("%02x ", *(ptr+1));
+    printf("%02x ", *(ptr+2));
+    printf("%02x ", *(ptr+3));
+
+    return 0;
+}
+```
+
+```c
+  #include <stdio.h>
+
+  int main(int argc, char const *argv[])
+  {
+      unsigned char mang[10] = {0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0A};
+
+      unsigned short *ptr = (unsigned short*) &mang[0]; // &mang hoặc địa chỉ đầu tiên
+
+      // Cấp phát địa chỉ theo MSB-LSB // Trọng số cao cấp phát trước(short = 2 byte)
+      mang[0] = 0x0201;
+      mang[1] = 0x0403;
+      mang[2] = 0x0605;
+      mang[3] = 0x0807;
+      mang[4] = 0x0A09;
+
+      return 0;
+  }
+```
+
+## 2. Biến với con trỏ
+
+> Kiểu dữ liệu khai báo biến và kiểu dữ liệu con trỏ phải **đồng bộ** với nhau.
+
+```c
+#include <stdio.h>
+
+int main()
+{
+  // Khai báo con trỏ xong, gán địa chỉ biến mà mình trỏ tới luôn
+  // Tránh khai báo mà để không sẽ bị trỏ đến địa chỉ rác
+  int x = 111;
+  int *ptr = &x;
+  
+  /** C2:
+   *  int *ptr;
+   *  ptr = &x;
+   * 
+   *   ptr: vùng địa chỉ mà con trỏ trỏ đến.
+   *  *ptr: giá trị tại vùng địa chỉ mà con trỏ trỏ đến.
+   *  &ptr: vùng địa chỉ của con trỏ. 
+   */
+
+
+  printf("Giá trị của x = %d\n", *ptr); // Giải tham chiếu con trỏ
+  printf("Địa chỉ của x là %x hoặc %x\n",&x , ptr);
+  printf("Địa chỉ của *ptr là %x\n",&ptr);
+
+  return 0;
+}
+```
+
+## 3. Toán tử tăng-giảm với con trỏ
+
+> Địa chỉ của con trỏ sẽ tăng hoặc giảm theo đúng kích thước của kiểu dữ liệu con trỏ nó trỏ tới.
+
+```c
+#include <stdio.h>
+
+int main(int argc, char const *argv[])
+{
+    unsigned char s1[10] = {1,2,3,4,5,6,7,8,9,10};
+    unsigned char *ptr;
+
+    ptr = s1; // ptr = &s1[0]
+
+    for (int i = 0; i < 10; i++)
+    {
+        printf("%d", *ptr); // mang[0]
+        ptr++;      // ptr + 1 // Không phải + 1 giá trị, mà nhảy sang phần tử liền kề (1byte)
+        // 1 - 0x01 (unsigned char)
+        // 2 - 0x02
+        // 3 - 0x03
+        // ...
+    }
+
+    //12345678910
+    return 0;
+}
+```
+
+```c
+#include <stdio.h>
+
+int main(int argc, char const *argv[])
+{
+    unsigned int s1[10] = {1,2,3,4,5,6,7,8,9,10};
+    unsigned int *ptr;
+
+    ptr = &s1[9];
+
+    for (int i = 10; i > 0; i--)
+    {
+        printf("%d", *ptr); // mang[10] = 10
+        ptr--;      // ptr - 1 // Không phải + 1 giá trị, mà lùi về phần tử liền kề (4byte)
+
+        // 10 - 0xE8 (unsigned int)
+        // 9  - 0xE4 
+        // 8  - 0xE0
+        // ...
+    }
+    
+    // 10987654321
+    return 0;
+}
+```
+
+<details>
+  <summary><h4>Một vài ví dụ về toán tử tăng-giảm với con trỏ</h4></summary>
+
+**VD1: (CHUẨN NHẤT)**
+```c
+  #include <stdio.h>
+
+  int main(int argc, char const *argv[])
+  {
+      int s1[4] = {5,3,7,9};
+      int *p = s1; // &s1[0]
+
+      // Hậu tố: thực hiện lênh lấy &s1[0] =5, tăng vị trí sau
+      // Kết thúc lệnh *p tăng lên 1 vị trí &s1[0] -> &s1[1]
+      int a = *p++; 
+      
+      int b = *p;   // Sử dụng lại *p (lấy giá trị hậu tố ở trên) -> s1[1] =3
+
+      printf("%d\n", a); // 5
+
+      printf("%d\n", b);   // 3
+      printf("%d\n", a+b); // 8
+      return 0;
+  }
+```
+
+**VD2:**
+```c
+  #include <stdio.h>
+
+  int main(int argc, char const *argv[])
+  {
+      int s1[4] = {1,2,3,4};
+      int *p = s1; // &s1[0]
+
+      printf("%d\n", *p++ + *p); 
+      // Hậu tố:  &s1[0] = 1
+      // lúc này *p đã thực hiện lệnh rồi -> tăng lên 1 vị trí liền kề &s1[1] = 2
+      // ERROR: undefined behavior -> 1 biến không thể vừa thay đổi vừa sử dụng
+      return 0;
+  }
+```
+
+**VD3:**
+```c
+  #include <stdio.h>
+
+  int main(int argc, char const *argv[])
+  {
+      int s1[4] = {1,2,3,4};
+      int *p = s1; // &s1[0]
+
+      // Tiền tố: p tăng lên 1 vị trí liền kề trước là &s1[0] -> &s1[1] 
+      // Giải tham chiếu *++p = 2
+      // *p ở sau vị trí &s1[1] = 2
+
+      // =>> ERROR: undefined behavior, vì không thể vừa thay đổi vừa sử dụng lại *p
+      printf("%d\n", *++p + *p);  // 4
+
+      return 0;
+  }
+```
+
+**VD4:**
+```c 
+  #include <stdio.h>
+
+  int main(int argc, char const *argv[])
+  {
+      int s1[4] = {5,3,1,4};
+      int *p = s1; // &s1[0]
+
+      // *p-- : là hậu tố -> lấy &s1[0] => *p-- = 5
+      // *p++ : đang ở &s1[0] giảm 1 phần tử liền kề là &s1[-1]
+      // =>> ERROR: undefined behavior, không thể vừa thay đổi vừa sử dụng lại *p
+      printf("%d\n", *p-- - *p++); 
+
+      return 0;
+  }
+```
+
+**VD5:**
+```c 
+  #include <stdio.h>
+
+  int main(int argc, char const *argv[])
+  {
+      int s1[4] = {5,3,1,4};
+      int *p = s1; // &s1[0]
+
+      // *p++ : là hậu tố -> lấy &s1[0] => *p++ = 5
+      // *p-- : đang ở &s1[0] tăng 1 phần tử liền kề là &s1[1], *p-- = 3, sau đó giảm khi kết thúc lệnh
+      //  5 - 3 =2
+
+      // =>> ERROR: undefined behavior, Bởi vì 1 biến không thể vừa bị thay đổi vừa sử dụng lại (*p-- còn 1 lần giảm nữa mà chưa được thực thi)
+
+      printf("%d\n", *p++ - *p--); 
+
+      return 0;
+  }
+```
+## 4. Mối quan hệ mảng với con trỏ
+
+```c
+#include <stdio.h>
+
+int main()
+{
+  int x[4];
+  int *p;
+  p = x;    
+  /** Viết kiểu khác:
+   *  int *p = x; hoặc int *p = &x[0]
+   *  Địa chỉ của mảng là tên mảng hoặc phần tử đầu tiên của mảng
+   */
+  return 0;
+}
+```
+Ta có: Các địa chỉ & Các giá trị
+
+- `&x[0]` tương đương với `p`, và `x[0]` hay `*p` và `p[0]` là tương đương nhau.
+
+- `&x[1]` tương đương với `p+1`, và `x[1]` tương đương với `*(p+1)` và `p[1]`.
+
+- `&x[2]` tương đương với `p+2`, và `x[2]` tương đương với `*(p+2)` và `p[2]`.
+
+```c
+/**
+ *  Thay đổi phần tử của mảng bằng pointer
+ */
+
+#include <stdio.h>
+
+int main(int argc, char const *argv[])
+{
+    int mang[10] = {1,2,3,4,5,6,7,8,9,10};
+    int *p = mang;
+
+    for (int i = 0; i < 10; i++)
+    {   
+        *p = *p + 10; // thay đổi giá trị mảng, *p giải tham chiếu
+        printf("mang[%d] = 0x%x\n", i, *p);
+        p++;    // truy cập địa chỉ của mảng để tăng lên các vị trí liền kề
+                // nếu *p là lấy giá trị rồi, không tăng vị trí được.
+    }
+    
+
+    return 0;
+}
+```
+
+
+</details>
 
 </details>
 
